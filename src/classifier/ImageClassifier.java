@@ -15,22 +15,34 @@ public class ImageClassifier {
 
 	public static void main(String[] args) {
 
-	    String modelDir = "C:\\Users\\Miguel\\Documents\\libTensorFlow\\inception5h";
-	    String imageDir = "C:\\Users\\Miguel\\Desktop\\Alexie\\";
-	    String imageFile = imageDir + "aabatteries_2_1.jpg";
+	    //String modelDir = TFModels.getInceptionDirectory();
+	    //String pbName = TFModels.getInceptionPBName();
+	    //String labelFile = TFModels.getInceptionLables();
+	    
+	    String modelDir = TFModels.getMobilenetDirectory(); 
+	    String pbName = TFModels.getMobilenetV1_050_PBName(); 
+	    String labelFile = TFModels.getMobilenetV1_050_Lables(); 
+	      
+	    //String pbName = TFModels.getMobilenetV1_1_PBName();
+	    //String labelFile = TFModels.getMobilenetV1_1_Lables(); 
+	    
+	    String outputLayer = "MobilenetV1/Predictions/Reshape_1";
+	    
+	    String imageDir = "C:\\Users\\299490\\Desktop\\Alexie\\";
+	    String imageFile = imageDir + "Daisy.jpg";
 
-	    byte[] graphDef = DirectoryMethods.readAllBytesOrExit(Paths.get(modelDir, "tensorflow_inception_graph.pb"));
+	    byte[] graphDef = DirectoryMethods.readAllBytesOrExit(Paths.get(modelDir, pbName));
 	    List<String> labels =
-	    		DirectoryMethods.readAllLinesOrExit(Paths.get(modelDir, "imagenet_comp_graph_label_strings.txt"));
+	    		DirectoryMethods.readAllLinesOrExit(Paths.get(modelDir, labelFile));
 	    byte[] imageBytes = DirectoryMethods.readAllBytesOrExit(Paths.get(imageFile));
 
 	    try (Tensor image = constructAndExecuteGraphToNormalizeImage(imageBytes)) {
-	      float[] labelProbabilities = TFlow.executeInceptionGraph(graphDef, image);
+	      float[] labelProbabilities = TFlow.executeInceptionGraph(graphDef, image, outputLayer);
 	      int bestLabelIdx = TFlow.maxIndex(labelProbabilities);
 	      System.out.println(
-	          String.format(
-	              "BEST MATCH: %s (%.2f%% likely)",
-	              labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f));
+	         String.format(
+	           "BEST MATCH: %s (%.2f%% likely)",
+	           labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f));
 	    }
 
 	}

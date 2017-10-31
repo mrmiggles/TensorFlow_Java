@@ -8,11 +8,11 @@ import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 
 public class TFlow {
-	  public static float[] executeInceptionGraph(byte[] graphDef, Tensor image) {
+	  public static float[] executeInceptionGraph(byte[] graphDef, Tensor image, String outputLayerName) {
 		    try (Graph g = new Graph()) {
 		      g.importGraphDef(graphDef);
 		      try (Session s = new Session(g);
-		          Tensor result = s.runner().feed("input", image).fetch("output").run().get(0)) {
+		          Tensor result = s.runner().feed("input", image).fetch(outputLayerName).run().get(0)) {
 		        final long[] rshape = result.shape();
 		        if (result.numDimensions() != 2 || rshape[0] != 1) {
 		          throw new RuntimeException(
