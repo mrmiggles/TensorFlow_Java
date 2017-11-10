@@ -2,8 +2,9 @@ package classifier;
 
 public class TFModels {
 
+	public static String user = "Miguel";
 	public static String getMobilenetDirectory() {
-		return "C:\\Users\\299490\\Documents\\TensorFlow\\models\\mobilenet\\";
+		return "C:\\Users\\" + user + "\\Documents\\TensorFlow\\models\\mobilenet\\";
 	}
 	
 	public static String getMobilenetV1_050_PBName() {
@@ -23,7 +24,7 @@ public class TFModels {
 	}	
 	
 	public static String getInceptionDirectory() {
-		return "C:\\Users\\299490\\Documents\\TensorFlow\\models\\inception5h\\";
+		return "C:\\Users\\" + user +  "\\Documents\\TensorFlow\\models\\inception5h\\";
 	}
 	
 	public static String getInceptionPBName() {
