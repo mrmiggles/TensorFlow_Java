@@ -16,52 +16,84 @@ public class ImageComparison {
 	public static void main(String[] args) {
 	    //String modelDir = TFModels.getMobilenetDirectory(); 	      
 	    //String pbName = TFModels.getMobilenetV1_1_PBName();
-	    //String labelFile = TFModels.getMobilenetV1_1_Lables(); 
-	    
-	    String outputLayer = "MobilenetV1/Predictions/Reshape_1";
 	    
 	    String modelDir = TFModels.getInception_v3_Directory();
 	    String pbName = TFModels.getInception_v3_PBName();
 	    
+	        
 	    String imageDir = "C:\\Users\\" + TFModels.user + "\\Desktop\\Alexie\\";
-	    String imageFile = imageDir + "Subject.jpg";
-	    byte[] imageBytes = DirectoryMethods.readAllBytesOrExit(Paths.get(imageFile));
+	    String subject = imageDir + "Subject.jpg";
+	    String scene =  imageDir + "Scene.jpg";
+	    
+	    byte[] im1 = DirectoryMethods.readAllBytesOrExit(Paths.get(subject));
+	    byte[] im2 = DirectoryMethods.readAllBytesOrExit(Paths.get(scene));
 	    
 	    
 		byte[] graphDef = DirectoryMethods.readAllBytesOrExit(Paths.get(modelDir, pbName));
+		
+  	  //inception-2015-12-05 'Cast' Tensor expects decoded JPEG with 'type': 'DT_FLOAT'
+		Tensor ts1 = constructAndExecuteGraphForInception_v3_2015(im1);
+		Tensor ts2 = constructAndExecuteGraphForInception_v3_2015(im2);
+		
+		float[] kp1 = getKeypoints(graphDef, ts1);
+		float[] kp2 = getKeypoints(graphDef, ts2);
+		
+		
+		System.out.println(cosineSimilarity(kp1,kp2));
+	}
+	
+	private static float[] getKeypoints(byte[] graphDef, Tensor image) {
 	    try (Graph g = new Graph()) {
 		      g.importGraphDef(graphDef);
 		      
 		      
 		      try (Session s = new Session(g)) {
+		    	  		    	 
 		    	  
-		          //Tensor result = s.runner().feed("input", image).fetch(outputLayer).run().get(0)
-		    	  Tensor image = constructAndExecutreGraphToGetKeypoints(imageBytes);
-		    	  Tensor result = s.runner().feed("DecodeJpeg/contents:0", image).fetch("pool_3:0").run().get(0);
-		    	  //System.out.println(result.toString());
+		    	  Tensor result = s.runner().feed("Cast", image).fetch("pool_3").run().get(0); //retreive layer 'pool_3' 2048 keypoints
+		    	  long rshape[] = result.shape();
+		    	  if(result.numDimensions() != 4 || rshape[0] != 1) return null;
 		    	  
+		    	  //float[][][][] kps = new float[1][1][1][(int) rshape[3]];
+		    	  //float[] t = result.copyTo(kps)[0][0][0];
+		    	  
+		    	  return result.copyTo(new float[1][1][1][(int)rshape[3]])[0][0][0];		    	  
+		    	  	    	  
 		      }
-	    }
+	    }		
 	}
 	
-	private static Tensor constructAndExecutreGraphToGetKeypoints(byte[] imageBytes) {
+	private static Tensor constructAndExecuteGraphForInception_v3_2015(byte[] imageBytes) {
 	    try (Graph g = new Graph()) {
 		      Builder.GraphBuilder b = new Builder.GraphBuilder(g);
-		      // Some constants specific to the pre-trained model at:
-		      // https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
-		      
+		      final int H = 224;
+		      final int W = 224;
+		      final float mean = 0f;
+		      final float scale = 255f;
 
 		      // Since the graph is being constructed once per execution here, we can use a constant for the
 		      // input image. If the graph were to be re-used for multiple input images, a placeholder would
 		      // have been more appropriate.
 		      final Output input = b.constant("input", imageBytes);
-		      final Output output = b.decodeJpeg(input, 3);
-		      	System.out.println(output.op().name());
+		      final Output output =  b.cast(b.decodeJpeg(input, 3), DataType.FLOAT);
+		     
 		      try (Session s = new Session(g)) {
 		        return s.runner().fetch(output.op().name()).run().get(0);
 		      }
 		    }		
 		
+	}
+	
+	public static double cosineSimilarity(float[] vectorA, float[] vectorB) {
+	    double dotProduct = 0.0;
+	    double normA = 0.0;
+	    double normB = 0.0;
+	    for (int i = 0; i < vectorA.length; i++) {
+	        dotProduct += vectorA[i] * vectorB[i];
+	        normA += Math.pow(vectorA[i], 2);
+	        normB += Math.pow(vectorB[i], 2);
+	    }   
+	    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
 
 }

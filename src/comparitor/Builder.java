@@ -11,18 +11,33 @@ public class Builder {
 		      this.g = g;
 		    }
 
+		    Output div(Output x, Output y) {
+			      return binaryOp("Div", x, y);
+			    }
 
-		    Output cast(Output value, DataType dtype) {
-		      return g.opBuilder("Cast", "Cast").addInput(value).setAttr("DstT", dtype).build().output(0);
-		    }
+			    Output sub(Output x, Output y) {
+			      return binaryOp("Sub", x, y);
+			    }
 
-		    Output decodeJpeg(Output contents, long channels) {
-		      return g.opBuilder("DecodeJpeg", "DecodeJpeg")
-		          .addInput(contents)
-		          .setAttr("channels", channels)
-		          .build()
-		          .output(0);
-		    }
+			    Output resizeBilinear(Output images, Output size) {
+			      return binaryOp("ResizeBilinear", images, size);
+			    }
+
+			    Output expandDims(Output input, Output dim) {
+			      return binaryOp("ExpandDims", input, dim);
+			    }
+
+			    Output cast(Output value, DataType dtype) {
+			      return g.opBuilder("Cast", "Cast").addInput(value).setAttr("DstT", dtype).build().output(0);
+			    }
+
+			    Output decodeJpeg(Output contents, long channels) {
+			      return g.opBuilder("DecodeJpeg", "DecodeJpeg")
+			          .addInput(contents)
+			          .setAttr("channels", channels)
+			          .build()
+			          .output(0);
+			    }
 
 		    Output constant(String name, Object value) {
 		      try (Tensor t = Tensor.create(value)) {

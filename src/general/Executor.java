@@ -12,6 +12,8 @@ public class Executor {
 		      g.importGraphDef(graphDef);
 		      try (Session s = new Session(g);
 		          Tensor result = s.runner().feed("input", image).fetch(outputLayerName).run().get(0)) {
+		    	  
+		    	  System.out.println(result);
 		        final long[] rshape = result.shape();
 		        if (result.numDimensions() != 2 || rshape[0] != 1) {
 		          throw new RuntimeException(
@@ -26,6 +28,7 @@ public class Executor {
 		  }
 	  
 	  
+	 /* Slow...redo this */
 	  public static int maxIndex(float[] probabilities) {
 		    int best = 0;
 		    for (int i = 1; i < probabilities.length; ++i) {

@@ -2,7 +2,7 @@ package classifier;
 
 public class TFModels {
 
-	public static String user = "Miguel";
+	public static String user = "299490";
 	public static String getMobilenetDirectory() {
 		return "C:\\Users\\" + user + "\\Documents\\TensorFlow\\models\\mobilenet\\";
 	}
