@@ -34,4 +34,16 @@ public class TFModels {
 	public static String getInceptionLables(){
 		return "imagenet_comp_graph_label_strings.txt";
 	}	
+	
+	public static String getInception_v3_Directory() {
+		return "C:\\Users\\" + user +  "\\Documents\\TensorFlow\\models\\inception_v3\\2015\\";
+	}
+	
+	public static String getInception_v3_PBName() {
+		return "inception_v3.pb";
+	}
+	
+	public static String getInception_v3_Lables(){
+		return "imagenet_slim_labels.txt";
+	}		
 }

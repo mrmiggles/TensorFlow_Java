@@ -30,11 +30,13 @@ public class ImageClassifier {
 	    
 	    String imageDir = "C:\\Users\\" + TFModels.user + "\\Desktop\\Alexie\\";
 	    String imageFile = imageDir + "Subject.jpg";
-
+	    byte[] imageBytes = DirectoryMethods.readAllBytesOrExit(Paths.get(imageFile));
+	    
+	    
 	    byte[] graphDef = DirectoryMethods.readAllBytesOrExit(Paths.get(modelDir, pbName));
 	    List<String> labels =
 	    		DirectoryMethods.readAllLinesOrExit(Paths.get(modelDir, labelFile));
-	    byte[] imageBytes = DirectoryMethods.readAllBytesOrExit(Paths.get(imageFile));
+
 
 	    try (Tensor image = constructAndExecuteGraphToNormalizeImage(imageBytes)) {
 	      float[] labelProbabilities = general.Executor.executeInceptionGraph(graphDef, image, outputLayer);
