@@ -74,11 +74,18 @@ public class ImageComparison {
 		      // Since the graph is being constructed once per execution here, we can use a constant for the
 		      // input image. If the graph were to be re-used for multiple input images, a placeholder would
 		      // have been more appropriate.
-		      final Output input = b.constant("input", imageBytes);
-		      final Output output =  b.cast(b.decodeJpeg(input, 3), DataType.FLOAT);
+		      //final Output input = b.constant("input", imageBytes);
 		     
+		      
+		      Output input = b.placeholder("input", DataType.STRING);
+		      
+		     final Output output =  b.cast(b.decodeJpeg(input, 3), DataType.FLOAT);
+		     
+		     		     
 		      try (Session s = new Session(g)) {
-		        return s.runner().fetch(output.op().name()).run().get(0);
+		       return s.runner().feed(input, Tensor.create(imageBytes)).fetch(output.op().name()).run().get(0);
+		       
+		    	  
 		      }
 		    }		
 		
