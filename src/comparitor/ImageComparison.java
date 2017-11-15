@@ -22,8 +22,8 @@ public class ImageComparison {
 	    
 	        
 	    String imageDir = "C:\\Users\\" + TFModels.user + "\\Desktop\\Alexie\\";
-	    String subject = imageDir + "Subject.jpg";
-	    String scene =  imageDir + "Scene.jpg";
+	    String subject = imageDir + "\\pepsi\\pepsi1.jpg";
+	    String scene =  imageDir +"\\pepsi\\pepsi1.jpg"; //"\\ipod\\117_0002.jpg";
 	    
 	    byte[] im1 = DirectoryMethods.readAllBytesOrExit(Paths.get(subject));
 	    byte[] im2 = DirectoryMethods.readAllBytesOrExit(Paths.get(scene));
@@ -39,7 +39,8 @@ public class ImageComparison {
 		float[] kp2 = getKeypoints(graphDef, ts2);
 		
 		
-		System.out.println(cosineSimilarity(kp1,kp2));
+		//System.out.println(cosineSimilarity(kp1,kp2));
+		System.out.println(euclideanDistance(kp1, kp2));
 	}
 	
 	private static float[] getKeypoints(byte[] graphDef, Tensor image) {
@@ -76,7 +77,7 @@ public class ImageComparison {
 		      // have been more appropriate.
 		      //final Output input = b.constant("input", imageBytes);
 		     
-		      
+		      //play with the placeholder idea
 		      Output input = b.placeholder("input", DataType.STRING);
 		      
 		     final Output output =  b.cast(b.decodeJpeg(input, 3), DataType.FLOAT);
@@ -100,7 +101,19 @@ public class ImageComparison {
 	        normA += Math.pow(vectorA[i], 2);
 	        normB += Math.pow(vectorB[i], 2);
 	    }   
+
 	    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
+	
+	static double euclideanDistance(float[] sequence1, float[] sequence2) {
+	     double sum = 0.0;
+	     
+	     for (int index=0; index<sequence1.length; index++) {
+	          sum = sum + Math.pow((sequence1[index] - sequence2[index]), 2 );
+	     }
+	     
+	     
+	     return Math.pow(sum, 0.5);//sum^0.5;
+	}	
 
 }
