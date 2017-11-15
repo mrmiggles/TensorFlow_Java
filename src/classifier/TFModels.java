@@ -2,7 +2,7 @@ package classifier;
 
 public class TFModels {
 
-	public static String user = "Miguel";
+	public static String user = "299490";
 	public static String getMobilenetDirectory() {
 		return "C:\\Users\\" + user + "\\Documents\\TensorFlow\\models\\mobilenet\\";
 	}
@@ -15,13 +15,22 @@ public class TFModels {
 		return "mobilenet_v1_0.50_224\\labels.txt";
 	}
 	
+	public static String getMobilenetV1_1_PBName(String graphName) {
+		return "mobilenet_v1_1.0_224\\" + graphName + ".pb";
+	}
+	
 	public static String getMobilenetV1_1_PBName() {
 		return "mobilenet_v1_1.0_224\\frozen_graph.pb";
-	}
+	}	
 	
 	public static String getMobilenetV1_1_Lables(){
 		return "mobilenet_v1_1.0_224\\labels.txt";
 	}	
+	
+	public static String getMobilenetV1_1_Lables(String labelsName){
+		return "mobilenet_v1_1.0_224\\" + labelsName + ".txt";
+	}	
+		
 	
 	public static String getInceptionDirectory() {
 		return "C:\\Users\\" + user +  "\\Documents\\TensorFlow\\models\\inception5h\\";

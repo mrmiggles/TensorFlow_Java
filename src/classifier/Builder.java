@@ -55,6 +55,14 @@ public class Builder {
 	            .output(0);
 	      }
 	    }
+	    
+	    Output placeholder(String name, DataType t){
+	    	return g.opBuilder("Placeholder", name)
+	    	.setAttr("dtype", t)
+	    	.build()
+	    	.output(0);
+	    }		    
+	    
 
 	    private Output binaryOp(String type, Output in1, Output in2) {
 	      return g.opBuilder(type, type).addInput(in1).addInput(in2).build().output(0);

@@ -1,5 +1,6 @@
 package comparitor;
 
+import java.io.File;
 import java.nio.file.Paths;
 
 import org.tensorflow.DataType;
@@ -12,6 +13,8 @@ import classifier.TFModels;
 import general.DirectoryMethods;
 
 public class ImageComparison {
+	
+	
 
 	public static void main(String[] args) {
 	    //String modelDir = TFModels.getMobilenetDirectory(); 	      
@@ -21,9 +24,20 @@ public class ImageComparison {
 	    String pbName = TFModels.getInception_v3_PBName();
 	    
 	        
-	    String imageDir = "C:\\Users\\" + TFModels.user + "\\Desktop\\Alexie\\";
-	    String subject = imageDir + "\\pepsi\\pepsi1.jpg";
-	    String scene =  imageDir +"\\pepsi\\pepsi1.jpg"; //"\\ipod\\117_0002.jpg";
+	    String imagesDir = "C:\\Users\\" + TFModels.user + "\\Desktop\\Alexie\\";
+	    
+	    File folder = new File("C:\\Users\\299490\\Documents\\TensorFlowProject\\tf_files\\images\\logos\\pepsi");
+	    String[] files = folder.list();
+	    
+	    String subject = imagesDir + "Subject.jpg";
+	    
+	    
+	    for(int i=0; i<files.length; i++) {
+	    	
+	    }
+	    /*
+	    
+	    String scene =  imagesDir +"\\pepsi\\pepsi1.jpg"; //"\\ipod\\117_0002.jpg";
 	    
 	    byte[] im1 = DirectoryMethods.readAllBytesOrExit(Paths.get(subject));
 	    byte[] im2 = DirectoryMethods.readAllBytesOrExit(Paths.get(scene));
@@ -41,6 +55,7 @@ public class ImageComparison {
 		
 		//System.out.println(cosineSimilarity(kp1,kp2));
 		System.out.println(euclideanDistance(kp1, kp2));
+		*/
 	}
 	
 	private static float[] getKeypoints(byte[] graphDef, Tensor image) {
@@ -92,28 +107,5 @@ public class ImageComparison {
 		
 	}
 	
-	public static double cosineSimilarity(float[] vectorA, float[] vectorB) {
-	    double dotProduct = 0.0;
-	    double normA = 0.0;
-	    double normB = 0.0;
-	    for (int i = 0; i < vectorA.length; i++) {
-	        dotProduct += vectorA[i] * vectorB[i];
-	        normA += Math.pow(vectorA[i], 2);
-	        normB += Math.pow(vectorB[i], 2);
-	    }   
-
-	    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
-	}
-	
-	static double euclideanDistance(float[] sequence1, float[] sequence2) {
-	     double sum = 0.0;
-	     
-	     for (int index=0; index<sequence1.length; index++) {
-	          sum = sum + Math.pow((sequence1[index] - sequence2[index]), 2 );
-	     }
-	     
-	     
-	     return Math.pow(sum, 0.5);//sum^0.5;
-	}	
 
 }
